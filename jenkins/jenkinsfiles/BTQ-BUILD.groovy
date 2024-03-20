@@ -20,8 +20,8 @@ pipeline{
   environment{
     ECR_FULL_NAME = "btq-${params.SERVICE}"
     ECR_URI = "474620256508.dkr.ecr.eu-west-1.amazonaws.com/${env.ECR_FULL_NAME}"
-    SL_TOKEN = (sh(returnStdout: true, script:"aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/template_token' | jq -r '.SecretString' | jq -r '.template_token'" )).trim()
-    TAG = "template_${params.TAG}"
+    SL_TOKEN = (sh(returnStdout: true, script:"aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/demo_token' | jq -r '.SecretString' | jq -r '.demo_token'" )).trim()
+    TAG = "demo_${params.TAG}"
   }
 
   stages{
@@ -29,7 +29,7 @@ pipeline{
       steps {
         script {
           // Clone the repository with the specified branch.
-          git branch: params.BRANCH, url: 'https://github.com/Sealights/microservices-demo-template.git'
+          git branch: params.BRANCH, url: 'https://github.com/Sealights-btq/demo-btq.git'
 
           stage("Create ECR repository") {
 

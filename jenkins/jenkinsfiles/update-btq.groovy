@@ -28,9 +28,9 @@ pipeline {
         }
     }
     environment {
-        SL_TOKEN = (sh(returnStdout: true, script:"aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/template_token' | jq -r '.SecretString' | jq -r '.template_token'" )).trim()
-        IDENTIFIER = '54.246.240.122'
-        tag = "template_${params.tag}"
+        SL_TOKEN = (sh(returnStdout: true, script:"aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/demo_token' | jq -r '.SecretString' | jq -r '.demo_token'" )).trim()
+        IDENTIFIER = 'demo.btq.sealights.co'
+        tag = "demo_${params.tag}"
     }
      stages {
         stage("Preparing Spin up") {
@@ -47,10 +47,10 @@ pipeline {
                     IP = "${IDENTIFIER}"
                             stage("Updating Helm") {
                                 sh script: """
-                                    aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'jkns-key_pair' | jq -r '.SecretString' | jq -r '.jkns_key_pair' > key.pem
+                                    aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/demo_key_pair' | jq -r '.SecretString' | jq -r '.demo_key_pair' > key.pem
                                     chmod 0400 key.pem
 
-                                    ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.246.240.122 'bash /opt/sealights/install-btq.sh ${env.tag} ${params.buildname} ${params.labid} ${params.branch} ${env.SL_TOKEN} ${params.branch}'
+                                    ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@demo.btq.sealights.co 'bash /opt/sealights/install-btq.sh ${env.tag} ${params.buildname} ${params.labid} ${params.branch} ${env.SL_TOKEN} ${params.branch}'
                                 """
                             }
                 }

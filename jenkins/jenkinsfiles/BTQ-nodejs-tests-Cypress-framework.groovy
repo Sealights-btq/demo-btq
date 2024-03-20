@@ -11,8 +11,8 @@ pipeline {
         string(name: 'SL_LABID', defaultValue: '', description: 'Lab_id')
     }
     environment {
-        SL_TOKEN = (sh(returnStdout: true, script:"aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/template_token' | jq -r '.SecretString' | jq -r '.template_token'" )).trim()
-        MACHINE_DNS = 'http://54.246.240.122:8081'
+        SL_TOKEN = (sh(returnStdout: true, script:"aws secretsmanager get-secret-value --region eu-west-1 --secret-id 'btq/demo_token' | jq -r '.SecretString' | jq -r '.demo_token'" )).trim()
+        MACHINE_DNS = 'http://demo.btq.sealights.co:8081'
     }
     options{
         buildDiscarder logRotator(numToKeepStr: '10')
@@ -25,7 +25,7 @@ pipeline {
         stage("Init test"){
             steps{
                 script{
-                git branch: params.BRANCH, url: 'https://github.com/Sealights/microservices-demo-template.git'   
+                git branch: params.BRANCH, url: 'https://github.com/Sealights-btq/demo-btq.git'   
                 }
             }
         }
